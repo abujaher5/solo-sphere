@@ -2,7 +2,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import JobCard from "./JobCard";
 
-const TabCategories = () => {
+const TabCategories = ({ jobs }) => {
   return (
     <div className=" container px-4 py-10 mx-auto">
       <div className="space-y-4 my-6">
@@ -25,9 +25,11 @@ const TabCategories = () => {
         </div>
 
         <TabPanel>
-          <h2>
-            <JobCard></JobCard>
-          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-5 mt-4">
+            {jobs.map((job) => (
+              <JobCard key={job._id} job={job}></JobCard>
+            ))}
+          </div>
         </TabPanel>
         <TabPanel>
           <h2>Any content 2</h2>
