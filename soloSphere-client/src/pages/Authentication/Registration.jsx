@@ -24,13 +24,24 @@ const Registration = () => {
   const handleRegistration = async (e) => {
     e.preventDefault();
     const form = e.target;
-    const userName = form.name.value;
-    const photoUrl = form.photo.value;
+    const name = form.name.value;
+    const photo = form.photo.value;
     const email = form.email.value;
     const password = form.password.value;
-    console.log(userName, photoUrl, email, password);
+    console.log(name, photo, email, password);
 
-    const result = await createUser(email, password);
+    try {
+      //user registration
+      const result = await createUser(email, password);
+      console.log(result);
+      await updateUserProfile(name, photo);
+      setUser({ ...user, photoURL: photo, displayName: name });
+      navigate("/");
+      toast.success("Registration Successfully");
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.message);
+    }
   };
   return (
     <div className="flex justify-center items-center min-h-[calc(100vh-306px)] my-12">
