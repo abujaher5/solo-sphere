@@ -14,7 +14,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.7rs8zhc.mongodb.net/?appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -31,12 +31,21 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
 
-    //Get all jobs data from db
+    // Get all jobs data from db
     app.get("/jobs", async (req, res) => {
       const jobsCollection = client.db("solosphereDB").collection("jobs");
       const bidsCollection = client.db("solosphereDB").collection("bids");
 
       const result = await jobsCollection.find().toArray();
+      res.send(result);
+    });
+
+    // Get a single job data from db using job id
+
+    app.get("/job/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await jobsCollection.findOne(query);
       res.send(result);
     });
 
