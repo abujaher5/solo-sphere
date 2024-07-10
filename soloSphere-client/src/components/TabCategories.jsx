@@ -1,8 +1,19 @@
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import JobCard from "./JobCard";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-const TabCategories = ({ jobs }) => {
+const TabCategories = () => {
+  const [jobs, setJobs] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      const { data } = await axios(`${import.meta.env.VITE_API_URL}/jobs`);
+      setJobs(data);
+    };
+    getData();
+  }, []);
   return (
     <div className=" container px-4 py-10 mx-auto">
       <div className="space-y-4 my-6">
@@ -26,16 +37,30 @@ const TabCategories = ({ jobs }) => {
 
         <TabPanel>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-5 mt-4">
-            {jobs.map((job) => (
-              <JobCard key={job._id} job={job}></JobCard>
-            ))}
+            {jobs
+              .filter((j) => j.category === "Web Development")
+              .map((job) => (
+                <JobCard key={job._id} job={job}></JobCard>
+              ))}
           </div>
         </TabPanel>
         <TabPanel>
-          <h2>Any content 2</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-5 mt-4">
+            {jobs
+              .filter((j) => j.category === "Graphics Design")
+              .map((job) => (
+                <JobCard key={job._id} job={job}></JobCard>
+              ))}
+          </div>
         </TabPanel>
         <TabPanel>
-          <h2>Any content 3</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-5 mt-4">
+            {jobs
+              .filter((j) => j.category === "Digital Marketing")
+              .map((job) => (
+                <JobCard key={job._id} job={job}></JobCard>
+              ))}
+          </div>
         </TabPanel>
       </Tabs>
     </div>
