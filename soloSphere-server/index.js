@@ -31,11 +31,10 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
 
+    const jobsCollection = client.db("solosphereDB").collection("jobs");
+    const bidsCollection = client.db("solosphereDB").collection("bids");
     // Get all jobs data from db
     app.get("/jobs", async (req, res) => {
-      const jobsCollection = client.db("solosphereDB").collection("jobs");
-      const bidsCollection = client.db("solosphereDB").collection("bids");
-
       const result = await jobsCollection.find().toArray();
       res.send(result);
     });
@@ -43,6 +42,7 @@ async function run() {
     // Get a single job data from db using job id
 
     app.get("/job/:id", async (req, res) => {
+      // const jobsCollection = client.db("solosphereDB").collection("jobs");
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await jobsCollection.findOne(query);
