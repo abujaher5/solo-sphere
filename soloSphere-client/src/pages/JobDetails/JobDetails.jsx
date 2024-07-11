@@ -1,6 +1,8 @@
 import { useContext, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 import DatePicker from "react-datepicker";
 
@@ -23,10 +25,18 @@ const JobDetails = () => {
   } = job || {};
 
   const handleFormSubmission = async (e) => {
+    if (user?.email === buyer_email)
+      return toast.error("Action not permitted!");
     e.preventDefault();
     const form = e.target;
     const jobId = _id;
     const price = parseFloat(form.price.value);
+
+    if (price < parseFloat(min_price))
+      return toast.error("Offer more or at least equal to Minimum Price.");
+    if (price > parseFloat(max_price))
+      return toast.error("Offer less or at least equal to Maximum Price");
+
     const comment = form.comment.value;
     const deadline = startDate;
     const email = user?.email;
@@ -43,7 +53,13 @@ const JobDetails = () => {
       buyer_email,
       email,
     };
-    console.table(bidData);
+
+    try {
+      const { data } = await axios.post("http://localhost:9000/bid", bidData);
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <div className="flex flex-col md:flex-row justify-around gap-5  items-center min-h-[calc(100vh-306px)] md:max-w-screen-xl mx-auto ">
@@ -71,7 +87,7 @@ const JobDetails = () => {
             <div>
               <p className="mt-2 text-sm  text-gray-600 ">Name: Jhankar Vai.</p>
               <p className="mt-2 text-sm  text-gray-600 ">
-                Email: jhankar@mahbub.com
+                Email: {buyer_email}
               </p>
             </div>
             <div className="rounded-full object-cover overflow-hidden w-14 h-14">
