@@ -6,6 +6,7 @@ import Registration from "../pages/Authentication/Registration";
 import JobDetails from "../pages/JobDetails/JobDetails";
 import AddJob from "../pages/AddJob/AddJob";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
+import MyPostedJobs from "../pages/MyPostedJob/MyPostedJobs";
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,18 @@ export const router = createBrowserRouter([
       {
         path: "/add-job",
         element: <AddJob></AddJob>,
+      },
+      {
+        path: "/my-posted-jobs",
+        element: <MyPostedJobs></MyPostedJobs>,
+      },
+      {
+        path: "/my-bids",
+        element: <MyPostedJobs></MyPostedJobs>,
+      },
+      {
+        path: "//bid-request",
+        element: <MyPostedJobs></MyPostedJobs>,
       },
     ],
   },
