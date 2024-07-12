@@ -58,6 +58,16 @@ async function run() {
       res.send(result);
     });
 
+    // save a job data in db
+
+    app.post("/job", async (req, res) => {
+      const jobData = req.body;
+
+      console.log(jobData);
+      const result = await jobsCollection.insertOne(jobData);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(

@@ -4,8 +4,9 @@ import { AuthContext } from "../../provider/AuthProvider";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-import DatePicker from "react-datepicker";
+// react date picker properties
 
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const JobDetails = () => {
@@ -21,13 +22,13 @@ const JobDetails = () => {
     description,
     min_price,
     max_price,
-    buyer_email,
+    buyer,
   } = job || {};
 
   const handleFormSubmission = async (e) => {
-    if (user?.email === buyer_email)
-      return toast.error("Action not permitted!");
     e.preventDefault();
+    if (user?.email === buyer?.email)
+      return toast.error("Action not permitted!");
     const form = e.target;
     const jobId = _id;
     const price = parseFloat(form.price.value);
@@ -49,13 +50,18 @@ const JobDetails = () => {
       comment,
       job_title,
       category,
-      status,
-      buyer_email,
       email,
+      buyer_email: buyer?.email,
+      status,
+      buyer,
     };
+    console.table(bidData);
 
     try {
-      const { data } = await axios.post("http://localhost:9000/bid", bidData);
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/bid`,
+        bidData
+      );
       console.log(data);
     } catch (err) {
       console.log(err);
@@ -67,7 +73,7 @@ const JobDetails = () => {
       <div className="flex-1  px-4 py-7 bg-white rounded-md shadow-md md:min-h-[350px]">
         <div className="flex items-center justify-between">
           <span className="text-sm font-light text-gray-800 ">
-            Deadline: {deadline}
+            Deadline: {new Date(deadline).toLocaleDateString()}
           </span>
           <span className="px-4 py-1 text-xs text-blue-800 uppercase bg-blue-200 rounded-full">
             {category}
@@ -85,13 +91,13 @@ const JobDetails = () => {
           </p>
           <div className="flex items-center gap-5">
             <div>
-              <p className="mt-2 text-sm  text-gray-600 ">Name: Jhankar Vai.</p>
+              <p className="mt-2 text-sm  text-gray-600 ">Name:{buyer?.name}</p>
               <p className="mt-2 text-sm  text-gray-600 ">
-                Email: {buyer_email}
+                Email: {buyer?.email}
               </p>
             </div>
             <div className="rounded-full object-cover overflow-hidden w-14 h-14">
-              <img src="" alt="" />
+              <img src={buyer?.photo} alt="" />
             </div>
           </div>
           <p className="mt-6 text-lg font-bold text-gray-600 ">
@@ -158,10 +164,7 @@ const JobDetails = () => {
           </div>
 
           <div className="flex justify-end mt-6">
-            <button
-              type="submit"
-              className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
-            >
+            <button className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
               Place Bid
             </button>
           </div>
