@@ -62,9 +62,16 @@ async function run() {
 
     app.post("/job", async (req, res) => {
       const jobData = req.body;
-
       console.log(jobData);
       const result = await jobsCollection.insertOne(jobData);
+      res.send(result);
+    });
+
+    // get all jobs posted by a specific user
+    app.get("/jobs/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { "buyer.email": email };
+      const result = await jobsCollection.find(query).toArray;
       res.send(result);
     });
 
