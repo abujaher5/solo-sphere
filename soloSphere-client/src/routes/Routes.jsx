@@ -41,14 +41,14 @@ export const router = createBrowserRouter([
         path: "/my-posted-jobs",
         element: <MyPostedJobs></MyPostedJobs>,
       },
-      {
-        path: "/my-bids",
-        element: <MyPostedJobs></MyPostedJobs>,
-      },
-      {
-        path: "//bid-request",
-        element: <MyPostedJobs></MyPostedJobs>,
-      },
+      // {
+      //   path: "/my-bids",
+      //   element: <MyPostedJobs></MyPostedJobs>,
+      // },
+      // {
+      //   path: "//bid-request",
+      //   element: <MyPostedJobs></MyPostedJobs>,
+      // },
     ],
   },
 ]);
