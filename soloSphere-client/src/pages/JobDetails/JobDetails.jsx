@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -13,6 +13,7 @@ const JobDetails = () => {
   const [startDate, setStartDate] = useState(new Date());
   const job = useLoaderData();
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const {
     _id,
@@ -63,6 +64,8 @@ const JobDetails = () => {
         bidData
       );
       console.log(data);
+      toast.success("Bid Placed Successfully.!");
+      navigate("/my-bids");
     } catch (err) {
       console.log(err);
     }

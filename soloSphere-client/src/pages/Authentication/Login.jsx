@@ -1,21 +1,29 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import bgImg from "../../assets/images/login.jpg";
 import logo from "../../assets/images/logo.png";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
 import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { signIn, signInWithGoogle } = useContext(AuthContext);
+  const location = useLocation();
+  const { signIn, signInWithGoogle, user, loading } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [navigate, user]);
+  const form = location.state || "/";
 
   // Google SignIn
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
       toast.success("SignIn Successful");
-      navigate("/");
+      navigate(form, { replace: true });
     } catch (err) {
       console.log(err);
       toast.error(err?.message);
@@ -46,13 +54,15 @@ const Login = () => {
     try {
       const result = await signIn(email, password);
       console.log(result);
-      navigate("/");
+      navigate(form, { replace: true });
       toast.success("Sign In Successfully");
     } catch (err) {
       console.log(err);
       toast.error(err?.message);
     }
   };
+
+  if (user || loading) return;
   return (
     <div className="flex justify-center items-center min-h-[calc(100vh-306px)] my-12">
       <div className="flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-lg  lg:max-w-4xl ">
