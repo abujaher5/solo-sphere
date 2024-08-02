@@ -8,6 +8,7 @@ const MyBids = () => {
   useEffect(() => {
     getData();
   }, [user]);
+
   const getData = async () => {
     const { data } = await axios(
       `${import.meta.env.VITE_API_URL}/my-bids/${user?.email}`
@@ -151,6 +152,7 @@ const MyBids = () => {
                         </div>
                       </td>
                       <td className="px-4 py-4 text-sm whitespace-nowrap">
+                        {/* complete button  */}
                         <button
                           disabled={bid.status !== "In Progress"}
                           onClick={() => handleStatus(bid._id, "Complete")}

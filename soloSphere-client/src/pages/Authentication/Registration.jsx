@@ -4,6 +4,7 @@ import logo from "../../assets/images/logo.png";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const Registration = () => {
   const navigate = useNavigate();
@@ -47,9 +48,24 @@ const Registration = () => {
     try {
       //user registration
       const result = await createUser(email, password);
-      console.log(result);
+
       await updateUserProfile(name, photo);
+
+      // Optimistic UI Update
+
       setUser({ ...user, photoURL: photo, displayName: name });
+
+      console.log(result.user);
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/jwt`,
+        {
+          email: result?.user?.email,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(data);
       navigate(form, { replace: true });
       toast.success("Registration Successfully");
     } catch (err) {
