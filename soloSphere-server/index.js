@@ -7,7 +7,7 @@ const port = process.env.PORT || 9000;
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "http://localhost:5174"],
+  origin: ["http://localhost:5174", "https://solo-sphere-74e1a.web.app"],
   credentials: true,
   optionSuccessStatus: 200,
 };
@@ -15,6 +15,24 @@ const corsOptions = {
 // middleware
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
+
+// verify middleware
+const verifyToken = (req, res, next) => {
+  const token = req.cookies?.token;
+  if (!token) return res.status(401).send({ message: "unauthorized access" });
+  if (token) {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+      if (err) {
+        console.log(err);
+        return res.status(401).send({ message: "unauthorized access" });
+      }
+      console.log(decoded);
+    });
+  }
+  console.log(token);
+  next();
+};
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.7rs8zhc.mongodb.net/?appName=Cluster0`;
@@ -99,7 +117,7 @@ async function run() {
 
     // get all jobs posted by a specific user
 
-    app.get("/jobs/:email", async (req, res) => {
+    app.get("/jobs/:email", verifyToken, async (req, res) => {
       const email = req.params.email;
       const query = { "buyer.email": email };
       const result = await jobsCollection.find(query).toArray();
@@ -115,7 +133,7 @@ async function run() {
     });
 
     // update a job in db
-    app.put("/job/:id", async (req, res) => {
+    app.put("/job/:id", verifyToken, async (req, res) => {
       const id = req.params.id;
       const jobData = req.body;
       const query = { _id: new ObjectId(id) };
